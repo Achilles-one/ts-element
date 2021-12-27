@@ -3,45 +3,11 @@
     <div class="forms-container">
       <div class="signin-signup">
         <!-- 登录 -->
-        <!-- ref="loginForm"设定验证表单的表单名 -->
-        <el-form
-          ref="loginForm"
-          :model="loginUser"
-          :rules="rules"
-          label-width="120px"
-          class="loginForm sign-in-form"
-        >
-          <el-form-item label="邮箱" prop="email">
-            <el-input
-              v-model="loginUser.email"
-              placeholder="输入邮箱"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input
-              v-model="loginUser.password"
-              type="password"
-              placeholder="输入密码"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button
-              @click="handleLogin('loginForm')"
-              type="primary"
-              class="submit_btn"
-              >提交</el-button
-            >
-          </el-form-item>
-
-          <!-- 找回密码 -->
-          <div class="tiparea">
-            <p>忘记密码？<a href="">立即找回</a></p>
-          </div>
-        </el-form>
+       <LoginForm :loginUser="loginUser" :rules="rules"/>
 
         <!-- 注册 -->
-        <!-- <h1>注册</h1> -->
+        <RegisterForm :registerUser="registerUser" :registerRules="registerRules"
+ />
       </div>
     </div>
 
@@ -70,7 +36,6 @@
       </div>
     </div>
   </div>
-  <div class="test"></div>
 </template>
 
 
@@ -78,52 +43,23 @@
 
 
 
-<script>
-import { ref, getCurrentInstance } from "vue";
+<script lang="ts">
+import { ref } from "vue";
+import {loginUser, rules} from "../utils/loginValidators"
+import { registerUser, registerRules } from "../utils/registerValidators";
+
+import LoginForm from "../components/LoginForm.vue"
+import RegisterForm from "../components/RegisterForm.vue"
 export default {
   name: "LoginRegister",
+  components: { LoginForm, RegisterForm },
   setup() {
-    //   可以用ctx表示当前实例this
-    const { ctx } = getCurrentInstance();
-    const signUpMode = ref(false);
+    const signUpMode = ref<boolean>(false);
 
-    const loginUser = ref({
-      email: "",
-      password: "",
-    });
 
-    // 校验规则
-    const rules = ref({
-      // trigger: 'blur'触发节点，离开表单时触发
-      email: [
-        {
-          type: "email",
-          message: "邮箱不正确",
-          required: "true",
-          trigger: "blur",
-        },
-      ],
-      password: [
-        // 密码定义了两条规则进行验证
-        { required: "true", message: "密码不能为空", trigger: "blur" },
-        { min: 6, max: 30, message: "密码长度必须在6-30之间", trigger: "blur" },
-      ],
-    });
+    
 
-    //   触发登录方法
-    const handleLogin = (formName) => {
-      // console.log(formName);
-      ctx.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    };
-
-    return { signUpMode, loginUser, rules, handleLogin };
+    return { signUpMode, loginUser, rules, registerUser, registerRules };
   },
 };
 </script>
